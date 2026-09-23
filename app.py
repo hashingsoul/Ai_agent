@@ -17,9 +17,9 @@ from langchain.agents import AgentExecutor, create_openai_tools_agent
 
 load_dotenv()
 
-open_router_api_key = os.getenv("open_router_api_key")
-tavily_api_key = os.getenv("tavily_api_key")
-openweathermap_api_key = os.getenv("openweathermap_api_key")
+open_router_api_key = os.getenv("OPEN_ROUTER_API_KEY")
+tavily_api_key = os.getenv("TAVILY_API_KEY")
+openweathermap_api_key = os.getenv("OPENWEATHERMAP_API_KEY")
 
 
 # ============================================
