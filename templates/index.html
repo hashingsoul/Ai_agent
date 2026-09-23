@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Agent</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                #0f172a;
+
+            color: white;
+
+            height: 100vh;
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 900px;
+
+            height: 100vh;
+
+            margin: auto;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .header {
+
+            text-align: center;
+
+            padding: 25px 20px 15px;
+
+            border-bottom:
+                1px solid #334155;
+        }
+
+
+        .title {
+
+            font-size: 34px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+
+        .subtitle {
+
+            color: #94a3b8;
+
+            font-size: 15px;
+        }
+
+
+        .status {
+
+            color: #22c55e;
+
+            font-size: 13px;
+
+            margin-top: 8px;
+        }
+
+
+        .creator {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            margin-top: 6px;
+        }
+
+
+        /* ==============================
+           CHAT AREA
+        ============================== */
+
+        .chat-container {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 25px 20px;
+        }
+
+
+        .message {
+
+            display: flex;
+
+            margin-bottom: 20px;
+        }
+
+
+        .message.user {
+
+            justify-content: flex-end;
+        }
+
+
+        .message.assistant {
+
+            justify-content: flex-start;
+        }
+
+
+        .bubble {
+
+            max-width: 75%;
+
+            padding: 13px 16px;
+
+            border-radius: 15px;
+
+            line-height: 1.5;
+
+            white-space: pre-wrap;
+        }
+
+
+        .user .bubble {
+
+            background: #2563eb;
+
+            color: white;
+
+            border-bottom-right-radius: 4px;
+        }
+
+
+        .assistant .bubble {
+
+            background: #1e293b;
+
+            color: #e2e8f0;
+
+            border-bottom-left-radius: 4px;
+        }
+
+
+        /* ==============================
+           INPUT AREA
+        ============================== */
+
+        .input-area {
+
+            padding: 15px 20px 20px;
+
+            border-top:
+                1px solid #334155;
+
+            background:
+                #0f172a;
+        }
+
+
+        .input-box {
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        #messageInput {
+
+            flex: 1;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid #475569;
+
+            background:
+                #1e293b;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+
+        #messageInput:focus {
+
+            border-color:
+                #3b82f6;
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding:
+                0 20px;
+
+            background:
+                #2563eb;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+
+        button:hover {
+
+            background:
+                #1d4ed8;
+        }
+
+
+        #clearButton {
+
+            margin-top: 10px;
+
+            background:
+                #334155;
+
+            padding:
+                10px 15px;
+        }
+
+
+        #clearButton:hover {
+
+            background:
+                #475569;
+        }
+
+
+        .thinking {
+
+            color: #94a3b8;
+
+            font-style: italic;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .title {
+
+                font-size: 27px;
+            }
+
+
+            .bubble {
+
+                max-width: 90%;
+            }
+
+
+            .input-box {
+
+                gap: 6px;
+            }
+
+
+            button {
+
+                padding:
+                    0 14px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ==========================
+         HEADER
+    =========================== -->
+
+    <div class="header">
+
+        <div class="title">
+            🤖 AI Agent
+        </div>
+
+        <div class="subtitle">
+            Powered by LangChain + OpenRouter
+        </div>
+
+        <div class="status">
+            ● Online
+        </div>
+
+        <div class="creator">
+            Created by <b>Sagnik</b>
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================
+         CHAT
+    =========================== -->
+
+    <div
+        class="chat-container"
+        id="chatContainer"
+    >
+
+        {% for message in messages %}
+
+            <div
+                class="message {{ message.role }}"
+            >
+
+                <div class="bubble">
+
+                    {{ message.content }}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+
+    <!-- ==========================
+         INPUT
+    =========================== -->
+
+    <div class="input-area">
+
+        <div class="input-box">
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Ask me anything..."
+                autocomplete="off"
+            >
+
+            <button
+                onclick="sendMessage()"
+            >
+                Send
+            </button>
+
+        </div>
+
+
+        <button
+            id="clearButton"
+            onclick="clearChat()"
+        >
+            🗑️ Clear Chat
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    // =================================
+    // GET ELEMENTS
+    // =================================
+
+    const messageInput =
+        document.getElementById(
+            "messageInput"
+        );
+
+    const chatContainer =
+        document.getElementById(
+            "chatContainer"
+        );
+
+
+    // =================================
+    // SCROLL TO BOTTOM
+    // =================================
+
+    function scrollToBottom() {
+
+        chatContainer.scrollTop =
+            chatContainer.scrollHeight;
+    }
+
+
+    scrollToBottom();
+
+
+    // =================================
+    // ADD MESSAGE
+    // =================================
+
+    function addMessage(
+        role,
+        content
+    ) {
+
+        const message =
+            document.createElement(
+                "div"
+            );
+
+        message.className =
+            "message " + role;
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+        bubble.className =
+            "bubble";
+
+
+        bubble.textContent =
+            content;
+
+
+        message.appendChild(
+            bubble
+        );
+
+
+        chatContainer.appendChild(
+            message
+        );
+
+
+        scrollToBottom();
+    }
+
+
+    // =================================
+    // SEND MESSAGE
+    // =================================
+
+    async function sendMessage() {
+
+        const message =
+            messageInput.value.trim();
+
+
+        if (!message) {
+
+            return;
+        }
+
+
+        // Show user message
+
+        addMessage(
+            "user",
+            message
+        );
+
+
+        messageInput.value = "";
+
+
+        // Thinking message
+
+        const thinking =
+            document.createElement(
+                "div"
+            );
+
+        thinking.className =
+            "message assistant";
+
+
+        thinking.innerHTML =
+            '<div class="bubble thinking">Thinking...</div>';
+
+
+        chatContainer.appendChild(
+            thinking
+        );
+
+
+        scrollToBottom();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify(
+                            {
+                                message: message
+                            }
+                        )
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            // Remove thinking
+
+            thinking.remove();
+
+
+            if (data.error) {
+
+                addMessage(
+                    "assistant",
+                    "Error: " +
+                    data.error
+                );
+
+                return;
+            }
+
+
+            addMessage(
+                "assistant",
+                data.answer
+            );
+
+
+        } catch (error) {
+
+            thinking.remove();
+
+
+            addMessage(
+                "assistant",
+                "Error connecting to server: " +
+                error.message
+            );
+        }
+
+    }
+
+
+    // =================================
+    // ENTER KEY
+    // =================================
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                sendMessage();
+            }
+
+        }
+    );
+
+
+    // =================================
+    // CLEAR CHAT
+    // =================================
+
+    async function clearChat() {
+
+        try {
+
+            await fetch(
+                "/clear",
+                {
+                    method: "POST"
+                }
+            );
+
+            chatContainer.innerHTML = "";
+
+        } catch (error) {
+
+            console.error(error);
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
