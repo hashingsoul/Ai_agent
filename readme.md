@@ -28,6 +28,13 @@
 
 Instead of relying only on the language model's internal knowledge, Nexora can use specialized tools when required.
 
+## 🌐 Live Application
+
+### 🚀 Try Nexora AI
+
+**Live Demo:**  
+https://ai-agent-zrdp.onrender.com/
+
 ### Core capabilities
 
 - 🤖 AI-powered conversations
@@ -67,3 +74,4 @@ Nexora:
 → Searches the web
 → Processes the results
 → Generates a response
+
