@@ -164,6 +164,127 @@
             30% { opacity: 1; transform: translateY(-3px); }
         }
 
+    
+        /* ---------- Senior developer / AI visual system ---------- */
+
+        body {
+            background:
+                radial-gradient(900px 520px at 15% -5%, rgba(74, 111, 255, .20), transparent 60%),
+                radial-gradient(780px 520px at 92% 8%, rgba(139, 92, 246, .16), transparent 62%),
+                radial-gradient(700px 520px at 55% 110%, rgba(34, 211, 238, .08), transparent 64%),
+                #050914;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: .34;
+            background:
+                linear-gradient(115deg, transparent 0 47%, rgba(100,130,255,.045) 48%, transparent 49%),
+                linear-gradient(65deg, transparent 0 57%, rgba(139,92,246,.035) 58%, transparent 59%);
+            background-size: 340px 340px, 420px 420px;
+            mask-image: radial-gradient(circle at center, black 0%, transparent 78%);
+            animation: developerGrid 22s linear infinite;
+        }
+
+        .creator-credit {
+            position: fixed;
+            left: 50%;
+            bottom: max(12px, env(safe-area-inset-bottom));
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: max-content;
+            max-width: calc(100vw - 28px);
+            padding: 7px 14px;
+            border: 1px solid rgba(148,163,184,.10);
+            border-radius: 999px;
+            background: rgba(7, 11, 20, .52);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 35px rgba(0,0,0,.18);
+            color: #65728a;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .13em;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: creditReveal .9s .7s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        .creator-credit strong {
+            color: #cbd5ff;
+            font-size: 9px;
+            letter-spacing: .14em;
+            text-shadow: 0 0 18px rgba(139,92,246,.22);
+        }
+
+        .creator-line {
+            width: 22px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120,143,255,.55));
+        }
+
+        .creator-line:last-child {
+            background: linear-gradient(90deg, rgba(120,143,255,.55), transparent);
+        }
+
+        @keyframes developerGrid {
+            from { background-position: 0 0, 0 0; }
+            to { background-position: 340px 340px, -420px 420px; }
+        }
+
+        @keyframes creditReveal {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 10px) scale(.96);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .creator-credit {
+                gap: 6px;
+                padding: 6px 10px;
+                font-size: 7px;
+                letter-spacing: .09em;
+            }
+
+            .creator-credit strong {
+                font-size: 8px;
+                letter-spacing: .10em;
+            }
+
+            .creator-line { width: 12px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body::after,
+            .creator-credit {
+                animation: none !important;
+            }
+        }
+
+    
+        @media (max-width: 640px) {
+            .creator-credit {
+                bottom: calc(max(10px, env(safe-area-inset-bottom)) + 2px);
+                opacity: .88;
+            }
+
+            .composer-wrap {
+                padding-bottom: max(46px, calc(env(safe-area-inset-bottom) + 38px));
+            }
+        }
+
     </style>
 
 </head>
@@ -171,9 +292,12 @@
 
 <body>
 
-    <div class="creator-signature" aria-label="Created by Sagnik Sen">
-        <span>Designed &amp; engineered by</span> <strong>Sagnik Sen</strong>
-    </div>
+    <footer class="creator-credit" aria-label="Created by Sagnik Sen">
+        <span class="creator-line"></span>
+        <span class="creator-label">DESIGNED &amp; ENGINEERED BY</span>
+        <strong>SAGNIK SEN</strong>
+        <span class="creator-line"></span>
+    </footer>
 
 
 
