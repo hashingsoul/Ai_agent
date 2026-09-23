@@ -33,6 +33,13 @@ app.secret_key = os.getenv(
     "change-this-secret-key"
 )
 
+#health checker
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy"
+    }), 200
+
 
 # ============================================
 # 3. TAVILY SEARCH TOOL
